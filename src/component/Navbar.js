@@ -31,36 +31,26 @@ function Navbar(props) {
   useEffect(() => {
     let infoafterload = [];
     const db = getDatabase();
-    const groupRef = ref(db, "users");
+    const groupRef = ref(db, `users/${user}`);
     onValue(groupRef, (snapshot) => {
       snapshot.forEach((item) => {
-        let infoItem = {
-          id: item.key,
-          phone: item.val().phoneNumber,
-          name: item.val().username,
-        };
-        infoafterload.push(infoItem);
-        setInfo(infoafterload);
+        setInfo(snapshot.val());
       });
     });
   }, [user]);
 
-  if (!info.length) {
+  console.log(info);
+
+  if (!info) {
     return <div className="text-center text-7xl">Welcome</div>;
   } else {
     return (
       <div className="flex flex-row justify-around align-items-center">
-        {info
-          .filter((item) => item.id === user)
-          .map((filtedItem) => (
-            <>
-              <div>{filtedItem.name}</div>
-              <div className="border-4 mt-10" onClick={logout}>
-                logout
-              </div>
-              <div>{filtedItem.phone}</div>
-            </>
-          ))}
+        <div>{info.username}</div>
+        <div className="border-4 mt-10" onClick={logout}>
+          logout
+        </div>
+        <div>{info.phoneNumber}</div>
       </div>
     );
   }
